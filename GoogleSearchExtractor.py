@@ -22,13 +22,11 @@ def scrape_google_links(pub_id, search_result_url, page_qty, initial_page=1):
         url = u"{}&start={}".format(search_result_url, i*10)
         print "Using link {}".format(url)
         request = urllib2.Request(url)
-        request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0) Gecko/20100101 Firefox/24.0')
+        request.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:24.0)'
+                                         'Gecko/20100101 Firefox/24.0')
         response = urllib2.urlopen(request)
         html = response.read()
-
-
         print "Scrapping Links for Page {}".format(i+1)
-
         links = scrape_google_search_page(html)
     unique_links = set(links)
     print "{} Unique Links Found from Scrapping for {}\n\n".format(len(unique_links), pub_id)
@@ -41,7 +39,6 @@ def scrape_google_search_page(html):
     soup = BeautifulSoup(html)
     links = []
     results = soup.findAll("h3", {"class", "r"})
-    print results
     for result in results:
         links += [result.find("a")["href"]]
     #pretty_html = soup.prettify().encode("utf-8")

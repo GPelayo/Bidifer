@@ -1,14 +1,9 @@
 import diffbot
 import simplejson
 import CorpusManager
-import ConfigParser
 
 
-def get_article_json(link):
-    config_data = ConfigParser.RawConfigParser()
-    config_data.read('settings/api-keys.ini')
-    token = config_data.get('DiffBot', 'Token')
-    
+def get_article_json(link, token):
     bias_bot = diffbot.DiffBot(token)
     try:
         article_json = bias_bot.article(link)
@@ -23,7 +18,7 @@ def get_article_json(link):
         return "{}"
 
 
-def get_multiple_article_json(links, publication_id, article_line_limit=10, initial_link_index=1):
+def get_multiple_article_json(links, publication_id, token, article_line_limit=10, initial_link_index=1):
     article_set = []
     total_articles = len(links)
     article_count = initial_link_index
@@ -39,7 +34,7 @@ def get_multiple_article_json(links, publication_id, article_line_limit=10, init
         print "Extracted Article {}/{} (Link: {})".format(article_count-invalid_articles_offset,
                                                           total_articles-invalid_articles_offset, i)
         try:
-            article = get_article_json(links[i-1])
+            article = get_article_json(links[i-1], token)
             article_text = article.get("text", "")
         except AttributeError as e:
             recorded_errors += "\nAttribute Error: {} at article {}".format(repr(e), i)
